@@ -1,0 +1,15 @@
+body {
+  font-family: Helvetica, "Trebuchet MS", Verdana, sans-serif;
+  color: #374659;
+  background-color: #F4F6F8;
+  margin: 0;
+}
+
+@keyframes skeletonLoading {
+  0% {
+    background-color: hsl(200, 20%, 80%);
+  }
+  100% {
+    background-color: hsl(200, 20%, 95%);
+  }
+}
