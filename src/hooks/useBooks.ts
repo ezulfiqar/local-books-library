@@ -4,8 +4,9 @@ import { BOOKS_API_URL } from "../constants";
 import { BookType } from "../types";
 
 export type UseBooksPropsType = {
-  // page?: number;
+  page: number;
   search?: string;
+  sort: string;
 };
 
 export type UseBooksReturnType = {
@@ -14,21 +15,20 @@ export type UseBooksReturnType = {
   isLoading: boolean;
   hasLoaded: boolean;
   totalItems: number;
-  loadNextPage: () => void;
+  totalPages: number;
 };
 
-export const useBooks = ({ search }: UseBooksPropsType): UseBooksReturnType => {
+export const useBooks = ({
+  page,
+  search,
+  sort,
+}: UseBooksPropsType): UseBooksReturnType => {
   const [books, setBooks] = useState<BookType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [isLastPage, setIsLastPage] = useState(false);
-  const [nextPage, setNextPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
-
-  const loadNextPage = (): void => {
-    if (isLoading || isLastPage) return;
-    setIsLoading(true);
-  };
 
   useEffect(() => {
     setBooks([]);
@@ -36,8 +36,7 @@ export const useBooks = ({ search }: UseBooksPropsType): UseBooksReturnType => {
     setIsLoading(true);
     setHasLoaded(false);
     setTotalItems(0);
-    setNextPage(0);
-  }, [search]);
+  }, [page, search, sort]);
 
   useEffect(() => {
     let isCancelled = false;
@@ -47,18 +46,20 @@ export const useBooks = ({ search }: UseBooksPropsType): UseBooksReturnType => {
 
     (async () => {
       try {
-        const response = await (await axios.get(`${BOOKS_API_URL}/books`)).data;
+        const response = await (
+          await axios.get(`${BOOKS_API_URL}/books`, {
+            params: { page, search, sort },
+          })
+        ).data;
 
         if (isCancelled) {
           return;
         }
 
-        console.log("nextPage", nextPage);
-
         setIsLastPage(response.next === null);
         setBooks(response.results);
 
-        setNextPage((currentPage) => currentPage + 1);
+        setTotalPages(Math.ceil(response.count / 32));
         setTotalItems(response.count);
         setHasLoaded(true);
         setIsLoading(false);
@@ -70,7 +71,7 @@ export const useBooks = ({ search }: UseBooksPropsType): UseBooksReturnType => {
     return () => {
       isCancelled = true;
     };
-  }, [isLoading, nextPage]);
+  }, [isLoading, page, search, sort]);
 
   return {
     books,
@@ -78,6 +79,6 @@ export const useBooks = ({ search }: UseBooksPropsType): UseBooksReturnType => {
     isLoading,
     hasLoaded,
     totalItems,
-    loadNextPage,
+    totalPages,
   };
 };

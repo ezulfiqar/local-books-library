@@ -1,44 +1,37 @@
-import React from "react";
+import React, { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import { styled, alpha, InputBase } from "@mui/material";
+import { Paper, InputBase, IconButton } from "@mui/material";
 
-const StyledSearch = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
-  width: "100%",
-}));
+type SearchPropsType = {
+  search: string;
+  setSearch: (value: string) => void;
+};
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+export const Search = ({ search, setSearch }: SearchPropsType) => {
+  const [value, setValue] = useState(search);
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-  },
-}));
-
-export const Search = () => {
   return (
-    <StyledSearch>
-      <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper>
-      <StyledInputBase
+    <Paper
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        width: "100%",
+      }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1, p: "2px 4px" }}
         placeholder="Search"
         inputProps={{ "aria-label": "search" }}
+        onChange={(event) => setValue(event.target.value)}
+        value={value}
       />
-    </StyledSearch>
+      <IconButton
+        sx={{ p: "10px" }}
+        aria-label="search"
+        onClick={() => setSearch(value)}
+      >
+        <SearchIcon />
+      </IconButton>
+    </Paper>
   );
 };

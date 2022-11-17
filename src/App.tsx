@@ -10,7 +10,7 @@ function App() {
         <Header />
         <Toolbar />
         <Box component="main" sx={{ p: 3 }}>
-          <Container maxWidth="sm">
+          <Container maxWidth="md">
             <Books />
           </Container>
         </Box>
