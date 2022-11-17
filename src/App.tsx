@@ -1,10 +1,13 @@
+import { Container } from "@mui/material";
 import React from "react";
 import { Books } from "./modules/Books";
 
 function App() {
   return (
     <div className="App">
-      <Books />
+      <Container maxWidth="md">
+        <Books />
+      </Container>
     </div>
   );
 }
