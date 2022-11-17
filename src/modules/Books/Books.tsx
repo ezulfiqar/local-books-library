@@ -19,6 +19,7 @@ export const Books = () => {
 
   useEffect(() => {
     setPage(1);
+    setSort("popular");
   }, [search]);
 
   const handlePageChange = (
