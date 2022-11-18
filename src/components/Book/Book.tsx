@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import {
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -19,10 +20,28 @@ const StyledTypography = styled(Typography)`
 
 type BookPropsType = {
   book: BookType;
+  variant?: "standard" | "shortlist";
 };
 
-export const Book = ({ book }: BookPropsType) => {
+export const Book = ({ book, variant = "standard" }: BookPropsType) => {
   const bookImage = book.formats["image/jpeg"];
+  const initialShortlist: BookType[] = localStorage.shortlist
+    ? JSON.parse(localStorage.shortlist)
+    : [];
+  const [isShortlisted, setIsShortlisted] = useState(
+    Boolean(initialShortlist.find((x) => x.id === book.id))
+  );
+
+  const handleShortlist = () => {
+    const shortlist: BookType[] = localStorage.shortlist
+      ? JSON.parse(localStorage.shortlist)
+      : [];
+
+    shortlist.push(book);
+    localStorage.shortlist = JSON.stringify(shortlist);
+    setIsShortlisted(true);
+  };
+
   return (
     <Card>
       {bookImage && (
@@ -30,13 +49,31 @@ export const Book = ({ book }: BookPropsType) => {
           alt="book cover"
           component="img"
           image={bookImage}
-          height={400}
+          height={variant === "standard" ? 400 : 70}
         />
       )}
       <CardContent>
         <StyledTypography title={book.title} variant="h6">
           {book.title}
         </StyledTypography>
+        <Typography>
+          {book.authors.map((author) => author.name).join(" - ")}
+        </Typography>
+        {variant === "standard" ? (
+          <Button
+            sx={{ mt: 2 }}
+            variant="contained"
+            fullWidth
+            onClick={handleShortlist}
+            disabled={isShortlisted}
+          >
+            {isShortlisted ? "Shortlisted" : "Shortlist"}
+          </Button>
+        ) : (
+          <Button sx={{ mt: 2 }} variant="contained" fullWidth>
+            Reserve
+          </Button>
+        )}
       </CardContent>
     </Card>
   );
