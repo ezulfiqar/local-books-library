@@ -40,15 +40,18 @@ fastify.post("/reserve", async (request) => {
       message: "Reserved successfully",
       availableDate: today.getTime(),
       returnDate: endDate,
-      reservations,
     };
   }
 
   return {
     isBookAvailable: false,
     message: "Book is not available for reservation",
-    reservations,
   };
+});
+
+fastify.get("/resrvations", async () => {
+  const reservations = requestContext.get("reservations");
+  return reservations;
 });
 
 const start = async () => {
