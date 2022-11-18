@@ -19,3 +19,7 @@ This app allows user to search through library of books and make reservations th
 4. returns the date of availability and return date if the book is available
 5. returns a message saying the book is not available if it is not
 6. list our the reserved books for a user
+
+## Run the project
+
+`npm i && npm start`
