@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import {
+  Box,
   Button,
   Card,
   CardContent,
   CardMedia,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   styled,
   Typography,
 } from "@mui/material";
 import { BookType } from "../../types";
+import { reserveApi } from "../../api";
+import { USER } from "../../constants";
 
 const StyledTypography = styled(Typography)`
   overflow: hidden;
@@ -24,6 +31,7 @@ type BookPropsType = {
 };
 
 export const Book = ({ book, variant = "standard" }: BookPropsType) => {
+  const [duration, setDuration] = useState(1);
   const bookImage = book.formats["image/jpeg"];
   const initialShortlist: BookType[] = localStorage.shortlist
     ? JSON.parse(localStorage.shortlist)
@@ -40,6 +48,15 @@ export const Book = ({ book, variant = "standard" }: BookPropsType) => {
     shortlist.push(book);
     localStorage.shortlist = JSON.stringify(shortlist);
     setIsShortlisted(true);
+  };
+
+  const handleReserve = async () => {
+    await reserveApi().reserveBook(
+      USER,
+      book.title,
+      book.authors[0].name,
+      duration
+    );
   };
 
   return (
@@ -70,9 +87,28 @@ export const Book = ({ book, variant = "standard" }: BookPropsType) => {
             {isShortlisted ? "Shortlisted" : "Shortlist"}
           </Button>
         ) : (
-          <Button sx={{ mt: 2 }} variant="contained" fullWidth>
-            Reserve
-          </Button>
+          <Box sx={{ mt: 2 }}>
+            <FormControl variant="standard" sx={{ p: "4px" }}>
+              <Select
+                id="duration"
+                value={duration}
+                onChange={(event) =>
+                  setDuration(parseInt(event.target.value.toString()))
+                }
+              >
+                <MenuItem value={1}>1 Day</MenuItem>
+                <MenuItem value={7}>1 Week</MenuItem>
+                <MenuItem value={30}>1 Month</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+              variant="contained"
+              onClick={handleReserve}
+              sx={{ float: "right" }}
+            >
+              Reserve
+            </Button>
+          </Box>
         )}
       </CardContent>
     </Card>

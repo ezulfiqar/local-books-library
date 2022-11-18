@@ -15,6 +15,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fastify/cors": "^8.2.0",
+    "@fastify/request-context": "^4.1.0",
     "@fontsource/roboto": "^4.5.8",
     "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.14",

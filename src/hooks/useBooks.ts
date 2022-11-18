@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { BOOKS_API_URL } from "../constants";
 import { BookType } from "../types";
+import { booksApi } from "../api/books";
 
 export type UseBooksPropsType = {
   page: number;
@@ -46,11 +45,7 @@ export const useBooks = ({
 
     (async () => {
       try {
-        const response = await (
-          await axios.get(`${BOOKS_API_URL}/books`, {
-            params: { page, search, sort },
-          })
-        ).data;
+        const response = await booksApi().fetchBooks(page, search, sort);
 
         if (isCancelled) {
           return;
