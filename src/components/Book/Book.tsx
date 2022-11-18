@@ -6,7 +6,6 @@ import {
   CardContent,
   CardMedia,
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   styled,
